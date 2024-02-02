@@ -36,7 +36,7 @@ export default function Profile() {
         className='profile__logout'
         onClick={onSignOut}
       >
-        로그아웃
+        로그아웃 압나더
       </div>
     </div>
   );
