@@ -10,8 +10,8 @@ interface PostListProps {
 }
 type TabType = "all" | "my";
 
-interface PostProps{
-    id:string;
+export interface PostProps{
+    id?:string;
     title:string;
     email:string;
     summary:string;
@@ -68,7 +68,7 @@ export default function PostList({hasNav = true} : PostListProps) {
                     <div className='post__title'>{post?.title}</div>
                     </Link>
 
-                    <div className='post__text'>{post?.content}</div>
+                    <div className='post__text'>{post?.summary}</div>
                     {post?.email === user?.email && (
                     <div className='post__utils-box'>
                         <div className='post__delete'>삭제</div>

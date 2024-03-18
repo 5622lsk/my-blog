@@ -162,14 +162,14 @@ footer a:hover{
   padding: 10px 0;
 }
 .post__detail .post__text{
-  padding: 40px 0px;
+  padding: 20px 0px;
   color: gray;
+}
+.post__text--pre-wrap{
+  white-space: pre-wrap;
 }
 .post_detail .post__profile-box{
   padding: 20px 0px;
-}
-.post__detail .post__text{
-  padding: 10px 0px;
 }
 .post__edit a{
   text-decoration: none;

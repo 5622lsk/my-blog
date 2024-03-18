@@ -1,5 +1,5 @@
 import React from 'react'
-import Detail from 'components/Detail'
+import Detail from 'components/PostDetail'
 import Header from 'components/Header'
 import Footer from 'components/Footer'
 
