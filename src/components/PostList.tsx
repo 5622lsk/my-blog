@@ -17,6 +17,8 @@ export interface PostProps{
     summary:string;
     content:string;
     createdAt:string;
+    uid:string;
+    updatedAt:string;
 }
 
 export default function PostList({hasNav = true} : PostListProps) {
