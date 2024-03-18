@@ -1,5 +1,5 @@
 import AuthContext from 'context/AuthContext';
-import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, orderBy, query} from 'firebase/firestore';
 import { db } from 'firebaseApp';
 import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -30,9 +30,10 @@ export default function PostList({hasNav = true} : PostListProps) {
 
 
     const getPosts = async() => {
-        const datas = await getDocs(collection(db, "posts"));
         setPosts([]); //posts초기화(변경된 post list 가져오도록)
-
+        let postsRef = collection(db, "posts");
+        let postsQuery = query(postsRef, orderBy("createdAt", "desc"));
+        const datas = await getDocs(postsQuery);
         datas?.forEach((doc) => {
             const dataObj= { ...doc.data(), id: doc.id };
             setPosts((prev) => [...prev, dataObj as PostProps ]);
@@ -44,7 +45,7 @@ export default function PostList({hasNav = true} : PostListProps) {
         if(confirm && id){
             await deleteDoc(doc(db, "posts", id));
             toast.success('게시글을 삭제했습니다.');
-            getPosts();//변경된 post list를 가져오도록
+            getPosts();//변경된 post list를 가져옴
         }   
     };
 
