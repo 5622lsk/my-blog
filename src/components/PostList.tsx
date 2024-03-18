@@ -1,5 +1,5 @@
 import AuthContext from 'context/AuthContext';
-import { collection, deleteDoc, doc, getDocs, orderBy, query} from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, orderBy, query, where} from 'firebase/firestore';
 import { db } from 'firebaseApp';
 import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 
 interface PostListProps {
     hasNav?: boolean;
+    defaultTap?: TabType;
 }
 type TabType = "all" | "my";
 
@@ -22,8 +23,8 @@ export interface PostProps{
     updatedAt:string;
 }
 
-export default function PostList({hasNav = true} : PostListProps) {
-    const [activeTab, setActiveTab] = useState<TabType>("all"); //기본을 전체게시물로
+export default function PostList({hasNav = true, defaultTap = "all"} : PostListProps) {
+    const [activeTab, setActiveTab] = useState<TabType>(defaultTap); //기본을 전체게시물로
     const [posts, setPosts] = useState<any[]>([]);
     const {user} = useContext(AuthContext);
 
@@ -32,7 +33,14 @@ export default function PostList({hasNav = true} : PostListProps) {
     const getPosts = async() => {
         setPosts([]); //posts초기화(변경된 post list 가져오도록)
         let postsRef = collection(db, "posts");
-        let postsQuery = query(postsRef, orderBy("createdAt", "desc"));
+        let postsQuery
+
+        if(activeTab === "my" && user){
+            postsQuery = query(postsRef, where('uid','==',user.uid))
+        } else {
+            postsQuery = query(postsRef, orderBy("createdAt", "desc"));
+        }
+
         const datas = await getDocs(postsQuery);
         datas?.forEach((doc) => {
             const dataObj= { ...doc.data(), id: doc.id };
@@ -48,10 +56,10 @@ export default function PostList({hasNav = true} : PostListProps) {
             getPosts();//변경된 post list를 가져옴
         }   
     };
-
+ 
     useEffect(()=>{
         getPosts();
-    },[]);
+    },[activeTab]); //나의글만 불러옴
 
     return (
     <>

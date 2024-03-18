@@ -9,7 +9,7 @@ export default function ProfilePage() {
     <>
       <Header />
       <Profile />
-      <PostList hasNav={false} />
+      <PostList hasNav={false} defaultTap='my' />
       <Footer />
       
     </>
