@@ -4,7 +4,8 @@ import { db } from 'firebaseApp';
 import AuthContext from 'context/AuthContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import {toast} from 'react-toastify'
-import { PostProps } from './PostList';
+import { CATEGORIES, CategoryType, PostProps } from './PostList';
+
 
 
 export default function PostForm() {
@@ -13,6 +14,7 @@ export default function PostForm() {
   const [title,setTitle] = useState<string>("");
   const [summary,setSummary] = useState<string>("");
   const [content,setContent] = useState<string>("");
+  const [category, setCategory] = useState<CategoryType>("Frontend");
   const {user} = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -32,7 +34,8 @@ export default function PostForm() {
           hour:"2-digit",
           minute:"2-digit",
           second:"2-digit",
-        })
+        }),
+        category: category
       });
       toast?.success("게시글을 수정했습니다");
       navigate(`/posts/${post.id}`);
@@ -49,6 +52,7 @@ export default function PostForm() {
         }),
         email:user?.email,
         uid: user?.uid,
+        category: category,
       }); 
     
     //파이어베이스로 데이터 생성하는 로직
@@ -62,7 +66,7 @@ export default function PostForm() {
  };
 
   const onChange = (
-      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      e: React.ChangeEvent< HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement >
     ) => {
     const {
       target:{name,value},
@@ -77,13 +81,15 @@ export default function PostForm() {
     if (name === "content"){
       setContent(value);
     }
+    if(name === "category"){
+      setCategory(value as CategoryType);
+    }
   };
 
   const getPost = async(id: string) => {
     if(id){
       const docRef = doc(db, "posts", id);
       const docSnap = await getDoc(docRef);
-      console.log(docSnap?.data());
 
       setPost({id: docSnap.id, ...(docSnap.data() as PostProps) });
     }
@@ -98,11 +104,13 @@ export default function PostForm() {
         setTitle(post?.title)
         setSummary(post?.summary)
         setContent(post?.content)
+        setCategory(post?.category as CategoryType);
       }
-    },[post])
+    },[post]);
 
   return (
       <form onSubmit={onSubmit} className='form'>
+        {/* 제목 */}
         <div className='form__block'>
           <label htmlFor="title">{post?.title}</label>
           <input
@@ -112,8 +120,26 @@ export default function PostForm() {
             required
             onChange={onChange}
             value={title}
+            placeholder='제목'
            />
         </div>
+        {/* 카테고리 */}
+        <div className='form__block'>
+          <label htmlFor="category">카테고리</label>
+          <select
+            name="category"
+            id="category"
+            onChange={onChange}
+            defaultValue={category}
+          >
+            <option value="">카테고리를 선택해주세요</option>
+            {CATEGORIES?.map((category) => (
+              <option value={category} key={category}>{category}</option>
+            ))} 
+        {/* value 속성은 해당 카테고리의 값을 가지고 있으며, key 속성은 각 요소를 구별하기 위한 식별자를 지정 */}
+          </select>
+        </div>
+        {/* 요약 */}
         <div className='form__block'>
           <label htmlFor='summary'>{post?.summary}</label>
           <input
@@ -123,8 +149,10 @@ export default function PostForm() {
             required
             onChange={onChange}
             value={summary}
+            placeholder='요약'
            />
         </div>
+        {/* 내용 */}
         <div className='form__block'>
           <label htmlFor='content'>{post?.content}</label>
           <textarea
@@ -133,8 +161,10 @@ export default function PostForm() {
             required 
             onChange={onChange}
             value={content}
+            placeholder='내용'
           />
         </div>
+        {/* 제출버튼 */}
         <div className='form__block'>
           <input 
           type="submit"

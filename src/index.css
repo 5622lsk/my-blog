@@ -97,7 +97,7 @@ footer a:hover{
 .post__box{
   padding-top: 25px;
   padding-bottom: 25px;
-  border-top: 1px solid #ccc;
+  /* border-top: 1px solid #ccc; */
 }
 
 .post__profile-box{
@@ -173,6 +173,12 @@ footer a:hover{
 }
 .post__edit a{
   text-decoration: none;
+}
+.post__category{
+  color:gray;
+  border:1px solid#ccc;
+  padding: 0 5px;
+  border-radius: 25px;
 }
 /* profile */
 .profile__box{
@@ -414,7 +420,13 @@ input:checked + .carousel__slide-container .nav label{
  .form__error{
   color:red
  }
-
+.form select {
+  border: 1px solid #ccc;
+  max-width: 680px;
+  height:40px;
+  padding: 0 20px;
+  border-radius: 5px;
+}
 
  /* loader */
  .loader{
