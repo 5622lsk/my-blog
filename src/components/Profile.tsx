@@ -28,7 +28,7 @@ export default function Profile() {
         <div className='profile__img'></div>
         <div>
           <div className='profile__email'>{user?.email}</div>
-          <div className='profile__naime'>{user?.displayName || '사용자'}</div>
+          <div className='profile__name'>{user?.displayName || '사용자'}</div>
         </div>
       </div>
       <div
@@ -36,7 +36,7 @@ export default function Profile() {
         className='profile__logout'
         onClick={onSignOut}
       >
-        로그아웃 압나더
+        로그아웃
       </div>
     </div>
   );
