@@ -5,40 +5,17 @@ import { db } from 'firebaseApp';
 import AuthContext from 'context/AuthContext';
 import { toast } from 'react-toastify';
 
-const COMMENTS = [
-    {
-        id:1,
-        email: "test@test.com",
-        content: "댓글임",
-        createdAt:"2023-06-13"
-    },
-    {
-        id:2,
-        email: "test@test.com",
-        content: "댓글임",
-        createdAt:"2023-06-13"
-    },
-    {
-        id:3,
-        email: "test@test.com",
-        content: "댓글임",
-        createdAt:"2023-06-13"
-    },
-    {
-        id:4,
-        email: "test@test.com",
-        content: "댓글임",
-        createdAt:"2023-06-13"
-    },
-];
 
 interface CommentsProps{
     post: PostProps;
+    getPost: (id: string) => Promise<void>;
 }
 
-export default function Comments({post}: CommentsProps) {
+export default function Comments({post, getPost}: CommentsProps) {
+    console.log(post?.comments?.slice(0)?.reverse()); 
     const [comment, setComment] = useState("");
     const {user} = useContext(AuthContext);
+
 
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const {target: {name, value},} = e;
@@ -72,6 +49,7 @@ export default function Comments({post}: CommentsProps) {
                             second:"2-digit",
                         }),
                     });
+                    await getPost(post.id);//문서 업데이트
                  }
             }
             toast.success("댓글 생성!");
@@ -101,8 +79,9 @@ export default function Comments({post}: CommentsProps) {
             </form>
 
             <div className='comments__list'>
-                {COMMENTS?.map((comment) => (
-                    <div key={comment.id} className='comment__box'>
+                {post?.comments?.slice(0)?.reverse() //댓글 최신순으로 나열
+                .map((comment) => (
+                    <div key={comment.createdAt} className='comment__box'>
                         <div className='comment__profile-box'>
                             <div className='comment__email'>{comment?.email}</div>
                             <div className='comment__date'>{comment?.createdAt}</div>
